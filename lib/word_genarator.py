@@ -4,6 +4,7 @@ from lib.models import GenerateModel
 import torch
 from torch import nn
 from torch import optim 
+import os
 
 
 class WordGenerator:
@@ -16,6 +17,7 @@ class WordGenerator:
         self.model = None
 
         self.device = ("cuda" if torch.cuda.is_available() else "cpu")
+        self.save_dir = "./models"
 
 
 
@@ -34,7 +36,7 @@ class WordGenerator:
 
     def train(self, epochs):
         loss_func = nn.NLLLoss()
-        optimizer = optim.SGD(self.model.parameters(), lr=0.0001)
+        optimizer = optim.SGD(self.model.parameters(), lr=0.001)
         self.model.train()
 
 
@@ -58,6 +60,17 @@ class WordGenerator:
 
             loss = sum(epoch_losses) / len(epoch_losses)
             print(f"Loss {loss}")
+
+        self._save()
+
+    def _save(self):
+        if os.path.isdir(self.save_dir) == False:
+            os.mkdir(self.save_dir)
+
+        model_name = "model_" + str(len(os.listdir(self.save_dir)))
+        model_path = os.path.join(self.save_dir, model_name)
+        torch.save(self.model.state_dict(), model_path)
+        print(f"Saved {model_path}")
 
 
 

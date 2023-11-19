@@ -9,6 +9,6 @@ if __name__ == "__main__":
             word_count=1000
             )
 
-    generator.train(epochs=100)
+    generator.train(epochs=300)
 
 
