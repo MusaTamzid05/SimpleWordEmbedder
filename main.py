@@ -1,12 +1,14 @@
 from lib.tokenizer import Tokenizer
 from lib.dataset import WordDataset
-import torch
+from lib.word_genarator import WordGenerator
 
 if __name__ == "__main__":
-    tokenizer = Tokenizer(corpus_path="./dracula.txt", word_count=1000)
-    word_dataset = WordDataset(tokenizer=tokenizer, context_size=5)
+    generator = WordGenerator()
+    generator.init_train(
+            corpus_path="./dracula.txt",
+            word_count=1000
+            )
 
-    for batch in word_dataset:
-        print(batch)
+    generator.train(epochs=100)
 
 
