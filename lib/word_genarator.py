@@ -39,35 +39,43 @@ class WordGenerator:
         optimizer = optim.SGD(self.model.parameters(), lr=0.001)
         self.model.train()
 
+        current_epoch = None
 
-        for epoch in range(epochs):
-            print(f"Epoch {epoch}", end="\t")
-            epoch_losses = []
+        try:
 
-            for batch in self.word_dataset:
-                self.model.zero_grad()
-                x, y = batch
-                x = x.to(self.device)
-                y = y.to(self.device)
+            for epoch in range(epochs):
+                print(f"Epoch {epoch}", end="\t")
+                epoch_losses = []
 
-                logits = self.model(x)
+                for batch in self.word_dataset:
+                    self.model.zero_grad()
+                    x, y = batch
+                    x = x.to(self.device)
+                    y = y.to(self.device)
 
-                loss = loss_func(logits, y)
-                loss.backward()
-                optimizer.step()
+                    logits = self.model(x)
 
-                epoch_losses.append(loss.item())
+                    loss = loss_func(logits, y)
+                    loss.backward()
+                    optimizer.step()
 
-            loss = sum(epoch_losses) / len(epoch_losses)
-            print(f"Loss {loss}")
+                    epoch_losses.append(loss.item())
 
-        self._save()
+                loss = sum(epoch_losses) / len(epoch_losses)
+                print(f"Loss {loss}")
+                current_epoch = epoch
 
-    def _save(self):
+        except KeyboardInterrupt:
+            print(f"\nClosing training at {current_epoch}")
+
+        finally:
+            self._save(epoch_count=current_epoch)
+
+    def _save(self, epoch_count):
         if os.path.isdir(self.save_dir) == False:
             os.mkdir(self.save_dir)
 
-        model_name = "model_" + str(len(os.listdir(self.save_dir)))
+        model_name = "model_" + str(epoch_count) + "_" +  str(len(os.listdir(self.save_dir)))
         model_path = os.path.join(self.save_dir, model_name)
         torch.save(self.model.state_dict(), model_path)
         print(f"Saved {model_path}")
