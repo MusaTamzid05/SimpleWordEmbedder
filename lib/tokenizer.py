@@ -11,6 +11,8 @@ class Tokenizer:
         self.word_to_id = {}
         self.id_to_word = {}
 
+        processed_words = []
+
         for word in self.words:
             word = self._clear(word=word)
             word = word.strip()
@@ -23,6 +25,9 @@ class Tokenizer:
             word_id = len(self.word_to_id) - 1
             self.word_to_id[word] = word_id
             self.id_to_word[word_id] = word
+            processed_words.append(word)
+
+        self.words = processed_words
 
 
 
@@ -53,10 +58,15 @@ class Tokenizer:
         return ids
 
 
-
-
     def decode(self, id_list):
         return [self.id_to_word[_id] for _id in id_list]
+
+    def get_words(self, start_index, end_index):
+        return self.words[start_index:end_index]
+
+    def get_word(self, index):
+        return self.words[index]
+
 
 
 
