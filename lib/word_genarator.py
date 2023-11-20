@@ -81,4 +81,35 @@ class WordGenerator:
         print(f"Saved {model_path}")
 
 
+    def generate(self, text, output_word_count):
+        words = text.split()
+        words = [word.lower() for word in words]
+
+        if len(words) != self.context_size:
+            print("Input size needs to be of {self.context_size} length")
+            return
+
+        start_index = 0
+        end_index = self.context_size
+
+        self.model.eval()
+
+        results = words
+
+        while len(results) < output_word_count:
+            input_words = results[start_index:end_index]
+            word_ids = [self.tokenizer.word_to_id[word] for word in input_words]
+            word_ids = torch.LongTensor(word_ids).to(self.device)
+            prediction = int(self.model(word_ids).argmax(1))
+            predicted_word = self.tokenizer.id_to_word[prediction]
+            results.append(predicted_word)
+
+            start_index += 1
+            end_index += 1
+
+        return " ".join(results)
+ 
+
+
+
 

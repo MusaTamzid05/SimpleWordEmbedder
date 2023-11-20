@@ -9,6 +9,8 @@ if __name__ == "__main__":
             word_count=1000
             )
 
-    generator.train(epochs=300)
+    generator.train(epochs=500)
+    print(generator.generate(text="How these papers have been", output_word_count=100))
+
 
 
