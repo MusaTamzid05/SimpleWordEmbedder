@@ -33,6 +33,10 @@ class Context:
             "loss" : loss
             })
 
+    def update_last_model_info(self, last_model_name, word_generator):
+        self.last_model_name = last_model_name
+        self.last_word_generator = word_generator
+
 
 
 context = Context()

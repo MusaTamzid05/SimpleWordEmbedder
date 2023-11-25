@@ -71,6 +71,37 @@ $(document).ready(() => {
 
     }, 1000);
 
+    $("#generate-button").click(() => {
+        const modelName = $("#model-name").find(":selected").val();
+        const userInput = $("#generate-input").val();
+        const wordCount = $("#word-count").val();
+
+        const params = {
+            "modelName" : modelName,
+            "userInput" : userInput,
+            "wordCount" : wordCount
+        };
+
+        console.log(params);
+
+        fetch("http://localhost:5000/generate_text",{
+            method: "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify(params)
+
+        })
+            .then(res => res.json())
+            .then(data => {
+                $("#generated-text").text(data["result"])
+            })
+            .catch(err => console.log(err));
+
+
+
+    })
+
     
 
 

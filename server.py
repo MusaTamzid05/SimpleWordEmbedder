@@ -17,6 +17,7 @@ import threading
 app = Flask(__name__)
 app.secret_key = "this is the world best secret key"
 CORPUS_UPLOAD_DIR = "corpus_data"
+MODEL_SAVE_DIR = "models"
 
 class TraningThread(threading.Thread):
     def __init__(self, corpus_name, epoch_count, model_name):
@@ -92,7 +93,8 @@ def train():
 
 @app.route("/generate", methods=["GET"])
 def generate():
-    return render_template("generate.html")
+    model_names = [model_name for model_name in os.listdir(MODEL_SAVE_DIR) if model_name.endswith(".model")]
+    return render_template("generate.html", model_names=model_names)
 
 
 @app.route("/current_model_info", methods=["GET"])
@@ -104,6 +106,39 @@ def get_current_info():
 
 
 
-    return render_template("generate.html")
+@app.route("/generate_text", methods=["POST"])
+def generate_text():
+    #TODO : Error checking
+    post_data = request.json
+    model_name = post_data["modelName"][:-6] # removing .model from name
+    word_count = int(post_data["wordCount"])
+    text = post_data["userInput"]
+
+
+    if context.last_model_name != model_name:
+        word_generator = WordGenerator()
+        word_generator.init_generator(
+                model_dir_path=MODEL_SAVE_DIR,
+                model_name=model_name
+                )
+        context.update_last_model_info(
+                last_model_name=model_name,
+                word_generator=word_generator)
+
+
+    
+    generated_text = context.last_word_generator.generate(
+            text=text,
+            output_word_count=word_count
+            )
+
+
+
+
+
+    response = {}
+    response["result"] = generated_text
+
+    return jsonify(response)
 
 

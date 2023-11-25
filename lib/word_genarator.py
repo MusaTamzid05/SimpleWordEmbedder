@@ -151,7 +151,7 @@ class WordGenerator:
 
         while len(results) < output_word_count:
             input_words = results[start_index:end_index]
-            word_ids = [self.tokenizer.word_to_id[word] for word in input_words]
+            word_ids =  self.tokenizer.encode(word_list=input_words)
             word_ids = torch.LongTensor(word_ids).to(self.device)
             prediction = int(self.model(word_ids).argmax(1))
             predicted_word = self.tokenizer.id_to_word[prediction]
