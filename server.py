@@ -116,10 +116,13 @@ def generate_text():
 
     words = text.split()
 
-    if len(words) < 5:
+    if len(words) <  5:
         response = {"result" : "Atleast 5 words are required"}
         return jsonify(response)
 
+    if word_count  <  20
+        response = {"result" : "Generated words should be atleast 20"}
+        return jsonify(response)
 
 
     if context.last_model_name != model_name:
