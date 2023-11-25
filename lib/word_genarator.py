@@ -28,7 +28,8 @@ class WordGenerator:
     def init_train(self, corpus_path, word_count):
         self.corpus_path = corpus_path
         self.word_count = word_count
-        self.tokenizer = Tokenizer(corpus_path=corpus_path,word_count=word_count)
+        self.tokenizer = Tokenizer()
+        self.tokenizer.init_train(corpus_path=corpus_path,word_count=word_count)
         self.word_dataset = WordDataset(tokenizer=self.tokenizer,context_size=self.context_size)
 
         self.model = GenerateModel(

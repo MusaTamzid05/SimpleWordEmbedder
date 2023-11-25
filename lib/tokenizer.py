@@ -1,7 +1,12 @@
 import random
+import os
+import pickle
 
 class Tokenizer:
-    def __init__(self, corpus_path, word_count):
+    def __init__(self):
+        pass
+
+    def init_train(self, corpus_path, word_count):
         text = None
         with open(corpus_path, "r") as f:
             text = f.read()
@@ -28,6 +33,7 @@ class Tokenizer:
             processed_words.append(word)
 
         self.words = processed_words
+
 
 
 
@@ -66,6 +72,39 @@ class Tokenizer:
 
     def get_word(self, index):
         return self.words[index]
+
+    def save(self, path, model_name):
+        info = {
+                "words" : self.words,
+                "word_to_id" : self.word_to_id,
+                "id_to_word" : self.id_to_word
+                }
+
+        model_path = os.path.join(path, model_name + "_tokenizer.pickle")
+
+        with open(model_path, "wb") as f:
+            pickle.dump(info, f)
+
+
+    def load(self, path, model_name):
+
+        model_path = os.path.join(path, model_name + "_tokenizer.pickle")
+
+        with open(model_path, "rb") as f:
+            info = pickle.load(f)
+            self.words = info["words"]
+            self.word_to_id = info["word_to_id"]
+            self.id_to_word = info["id_to_word"]
+
+
+
+
+
+
+
+
+
+
 
 
 
