@@ -36,6 +36,31 @@ class WordGenerator:
                 ).to(self.device)
 
 
+
+    def init_generator(self, model_dir_path, model_name):
+        self.tokenizer = Tokenizer()
+        self.tokenizer.load(path=model_dir_path, model_name=model_name)
+
+        model_info_path = os.path.join(model_dir_path, model_name + ".pickle")
+        model_info = {}
+
+        with open(model_info_path, 'rb') as f:
+            model_info = pickle.load(f)
+
+        self.embedding_dims = model_info["embedding_dims"]
+        self.context_size = model_info["context_size"]
+
+        self.model = GenerateModel(
+                vocab_size=len(self.tokenizer.words),
+                embedding_dims= self.embedding_dims,
+                context_size=self.context_size
+                ).to(self.device)
+
+
+        model_path = os.path.join(model_dir_path, model_name + ".model")
+        self.model.load_state_dict(torch.load(model_path))
+
+
     def train(self, epochs, model_name=None):
         loss_func = nn.NLLLoss()
         optimizer = optim.SGD(self.model.parameters(), lr=0.001)
@@ -87,7 +112,7 @@ class WordGenerator:
         if model_name is None:
             model_name = "model_" + str(epoch_count) + "_" +  str(len(os.listdir(self.save_dir)))
 
-        model_path = os.path.join(self.save_dir, model_name)
+        model_path = os.path.join(self.save_dir, model_name + ".model")
         torch.save(self.model.state_dict(), model_path)
 
         self.tokenizer.save(path=self.save_dir,model_name=model_name)
