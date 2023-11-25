@@ -120,7 +120,7 @@ def generate_text():
         response = {"result" : "Atleast 5 words are required"}
         return jsonify(response)
 
-    if word_count  <  20
+    if word_count  <  20:
         response = {"result" : "Generated words should be atleast 20"}
         return jsonify(response)
 
