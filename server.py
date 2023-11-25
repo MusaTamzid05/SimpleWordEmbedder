@@ -114,6 +114,13 @@ def generate_text():
     word_count = int(post_data["wordCount"])
     text = post_data["userInput"]
 
+    words = text.split()
+
+    if len(words) < 5:
+        response = {"result" : "Atleast 5 words are required"}
+        return jsonify(response)
+
+
 
     if context.last_model_name != model_name:
         word_generator = WordGenerator()
