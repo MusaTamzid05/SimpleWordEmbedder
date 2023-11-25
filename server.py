@@ -33,17 +33,15 @@ def home():
                     )
             flash(f"{filename} uploaded")
 
-
-
+        
 
 
         return redirect(url_for("home"))
 
 
+    corpus_files = os.listdir(CORPUS_UPLOAD_DIR)
 
-
-
-    return render_template("home.html")
+    return render_template("home.html", corpus_files=corpus_files)
 
 
 @app.route("/generate", methods=["GET"])
