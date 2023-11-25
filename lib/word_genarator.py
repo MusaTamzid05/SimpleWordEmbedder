@@ -34,7 +34,7 @@ class WordGenerator:
                 ).to(self.device)
 
 
-    def train(self, epochs):
+    def train(self, epochs, model_name=None):
         loss_func = nn.NLLLoss()
         optimizer = optim.SGD(self.model.parameters(), lr=0.001)
         self.model.train()
@@ -69,13 +69,14 @@ class WordGenerator:
             print(f"\nClosing training at {current_epoch}")
 
         finally:
-            self._save(epoch_count=current_epoch)
+            self._save(epoch_count=current_epoch, model_name=model_name)
 
-    def _save(self, epoch_count):
+    def _save(self, epoch_count, model_name=None):
         if os.path.isdir(self.save_dir) == False:
             os.mkdir(self.save_dir)
 
-        model_name = "model_" + str(epoch_count) + "_" +  str(len(os.listdir(self.save_dir)))
+        if model_name is None:
+            model_name = "model_" + str(epoch_count) + "_" +  str(len(os.listdir(self.save_dir)))
         model_path = os.path.join(self.save_dir, model_name)
         torch.save(self.model.state_dict(), model_path)
         print(f"Saved {model_path}")
