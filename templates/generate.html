@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Generation</h2>
+ <table id="fetchTable">
+        <tr>
+            <th>Select an Option:</th>
+            <td>
+                <select id="model-name">
+                    {% for model_name in model_names  %}
+                        <option value="{{ model_name }}">{{ model_name }}</option>
+                    {% endfor %}
+                    <!-- Add more options as needed -->
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>Enter Text:</th>
+            <td>
+                <textarea id="generate-input" rows="4"></textarea>
+            </td>
+        </tr>
+
+        <tr>
+            <th>Enter Word Count</th>
+            <td>
+                <input type="text " id="word-count" />
+            </td>
+        </tr>
+        <tr>
+            <th></th>
+            <td>
+                <button id="generate-button">Generate</button>
+            </td>
+        </tr>
+        <tr>
+            <th>Generated Response:</th>
+            <td>
+                <div id="fetchResponse">
+                    <p id="generated-text"></p>
+
+</div>
+            </td>
+        </tr>
+    </table>
+
+
+
+{% endblock %}
+
