@@ -35,7 +35,43 @@ $(document).ready(() => {
             })
             .catch(err => console.log(err));
 
-    })
+    });
+
+    setInterval(() => {
+        fetch("http://localhost:5000/current_model_info",{
+            method: "GET",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+
+        })
+            .then(res => res.json())
+            .then(data => {
+                if(data.length == 0)
+                    return;
+
+                const epochTable = "epoch-table";
+                $("#" + epochTable).remove();
+
+                let tableContent = `<table id=${epochTable}>`;
+
+                data.forEach((epochData) => {
+                    const name = epochData["name"];
+                    const epochCount = epochData["epochs"];
+                    const loss = epochData["loss"];
+
+                    tableContent +=  `<tr><td>Model name ${name}</td><td>Epochs ${epochCount}</td><td>Loss ${loss}</td></tr>`;
+                });
+
+                tableContent += "</table>";
+
+                $("#epoch-info").append(tableContent);
+            })
+            .catch(err => console.log(err));
+
+    }, 1000);
+
+    
 
 
 });

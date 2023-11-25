@@ -8,6 +8,7 @@ from flask import jsonify
 from werkzeug.utils import secure_filename
 
 from lib.word_genarator import WordGenerator
+from lib.context import context
 
 from datetime import datetime
 import os
@@ -92,3 +93,17 @@ def train():
 @app.route("/generate", methods=["GET"])
 def generate():
     return render_template("generate.html")
+
+
+@app.route("/current_model_info", methods=["GET"])
+def get_current_info():
+    global context
+    response = [model_data for model_data in context.model_data]
+    return jsonify(response)
+
+
+
+
+    return render_template("generate.html")
+
+

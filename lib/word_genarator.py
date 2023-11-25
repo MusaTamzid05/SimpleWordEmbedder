@@ -1,10 +1,14 @@
 from lib.tokenizer import Tokenizer
 from lib.dataset import WordDataset
 from lib.models import GenerateModel
+from lib.context import context
+
+
 import torch
 from torch import nn
 from torch import optim 
 import os
+
 
 
 class WordGenerator:
@@ -64,6 +68,13 @@ class WordGenerator:
                 loss = sum(epoch_losses) / len(epoch_losses)
                 print(f"Loss {loss}")
                 current_epoch = epoch
+
+                if model_name != None:
+                    context.add(
+                            model_name=model_name,
+                            epochs=current_epoch,
+                            loss=loss
+                            )
 
         except KeyboardInterrupt:
             print(f"\nClosing training at {current_epoch}")
