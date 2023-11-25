@@ -115,6 +115,7 @@ def generate_text():
     text = post_data["userInput"]
 
     words = text.split()
+    print(words)
 
     if len(words) <  5:
         response = {"result" : "Atleast 5 words are required"}
@@ -135,7 +136,7 @@ def generate_text():
                 last_model_name=model_name,
                 word_generator=word_generator)
 
-
+    text = " ".join(words[0:5])
     
     generated_text = context.last_word_generator.generate(
             text=text,

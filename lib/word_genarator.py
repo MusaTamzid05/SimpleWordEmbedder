@@ -139,7 +139,7 @@ class WordGenerator:
         words = [word.lower() for word in words]
 
         if len(words) != self.context_size:
-            print("Input size needs to be of {self.context_size} length")
+            print(f"Input size needs to be of {self.context_size} length, given {len(words)}")
             return
 
         start_index = 0
