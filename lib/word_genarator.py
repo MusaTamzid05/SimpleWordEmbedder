@@ -8,34 +8,31 @@ import torch
 from torch import nn
 from torch import optim 
 import os
+import pickle
 
 
 
 class WordGenerator:
     def __init__(self):
-        self.corpus_path = None
-        self.word_count= None
-        self.context_size = 5  
-        self.tokenizer = None
-        self.word_dataset = None
-        self.model = None
-
         self.device = ("cuda" if torch.cuda.is_available() else "cpu")
         self.save_dir = "./models"
 
 
 
     def init_train(self, corpus_path, word_count):
+        self.context_size = 5  
+        self.embedding_dims = 10
         self.corpus_path = corpus_path
         self.word_count = word_count
+
         self.tokenizer = Tokenizer()
         self.tokenizer.init_train(corpus_path=corpus_path,word_count=word_count)
         self.word_dataset = WordDataset(tokenizer=self.tokenizer,context_size=self.context_size)
 
         self.model = GenerateModel(
                 vocab_size=len(self.tokenizer.words),
-                embedding_dims= 10,
-                context_size=5
+                embedding_dims= self.embedding_dims,
+                context_size=self.context_size
                 ).to(self.device)
 
 
@@ -89,8 +86,26 @@ class WordGenerator:
 
         if model_name is None:
             model_name = "model_" + str(epoch_count) + "_" +  str(len(os.listdir(self.save_dir)))
+
         model_path = os.path.join(self.save_dir, model_name)
         torch.save(self.model.state_dict(), model_path)
+
+        self.tokenizer.save(path=self.save_dir,model_name=model_name)
+
+        model_info_path = os.path.join(self.save_dir, model_name + ".pickle")
+
+        with open(model_info_path, "wb") as f:
+            pickle.dump({
+                "embedding_dims" : self.embedding_dims,
+                "vocab_count" : len(self.tokenizer.words),
+                "context_size" : self.context_size
+
+
+                }, f)
+
+
+
+
         print(f"Saved {model_path}")
 
 
